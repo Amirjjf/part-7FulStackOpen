@@ -1,35 +1,35 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { setNotificationAsync } from "./reducers/notificationReducer";
+import {
+  initializeBlogs,
+  createBlog,
+  likeBlog as likeBlogAction,
+  deleteBlog as deleteBlogAction,
+} from "./reducers/blogReducer";
+import { loginUser, logoutUser, initializeUser } from "./reducers/userReducer";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
+  const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.user);
   const notification = useSelector((state) => state.notification);
   const dispatch = useDispatch();
 
   const blogFormRef = useRef();
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
-  }, []);
+    dispatch(initializeUser());
+  }, [dispatch]);
 
   // Fetch Blogs
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   // Show Notifications
   const showNotification = (message, type = "success", duration = 5) => {
@@ -40,10 +40,7 @@ const App = () => {
   // Handle Login
   const handleLogin = async (credentials) => {
     try {
-      const user = await loginService.login(credentials);
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
+      const user = await dispatch(loginUser(credentials));
       showNotification(`Welcome, ${user.name}!`, "success");
     } catch (error) {
       showNotification("Wrong username or password", "error");
@@ -52,18 +49,16 @@ const App = () => {
 
   // Handle Logout
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogAppUser");
-    setUser(null);
+    dispatch(logoutUser());
     showNotification("Logged out successfully", "success");
   };
 
   // Handle Blog Creation
   const addBlog = async (newBlog) => {
     try {
-      const returnedBlog = await blogService.create(newBlog);
-      setBlogs(blogs.concat(returnedBlog));
+      await dispatch(createBlog(newBlog));
       showNotification(
-        `Added "${returnedBlog.title}" by ${returnedBlog.author}`,
+        `Added "${newBlog.title}" by ${newBlog.author}`,
         "success"
       );
 
@@ -76,13 +71,7 @@ const App = () => {
   // Handle Blog Like
   const likeBlog = async (blog) => {
     try {
-      const updatedBlog = {
-        ...blog,
-        likes: blog.likes + 1,
-        user: blog.user.id || blog.user,
-      };
-      const returnedBlog = await blogService.update(blog.id, updatedBlog);
-      setBlogs(blogs.map((b) => (b.id === blog.id ? returnedBlog : b)));
+      await dispatch(likeBlogAction(blog));
     } catch (error) {
       showNotification("Failed to update likes", "error");
     }
@@ -92,8 +81,7 @@ const App = () => {
   const deleteBlog = async (blog) => {
     if (window.confirm(`Are you sure you want to delete "${blog.title}"?`)) {
       try {
-        await blogService.remove(blog.id);
-        setBlogs(blogs.filter((b) => b.id !== blog.id));
+        await dispatch(deleteBlogAction(blog.id));
         showNotification(`Deleted "${blog.title}"`, "success");
       } catch (error) {
         showNotification("Failed to delete blog", "error");
