@@ -1,90 +1,88 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-
-
-const API_URL = 'https://studies.cs.helsinki.fi/restcountries/api/name/'
+const API_URL = "https://studies.cs.helsinki.fi/restcountries/api/name/";
 
 const useField = (type) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("");
 
   const onChange = (event) => {
-    setValue(event.target.value)
-  }
+    setValue(event.target.value);
+  };
 
   return {
     type,
     value,
-    onChange
-  }
-}
+    onChange,
+  };
+};
 
 const useCountry = (name) => {
   const [country, setCountry] = useState({
     found: false,
-    data: null
-  })
+    data: null,
+  });
 
   useEffect(() => {
     if (name) {
       axios
         .get(`${API_URL}${name}`)
-        .then(response => {
+        .then((response) => {
           setCountry({
             found: true,
-            data: response.data
-          })
+            data: response.data,
+          });
         })
         .catch(() => {
           setCountry({
             found: false,
-            data: null
-          })
-        })
+            data: null,
+          });
+        });
     } else {
-      setCountry({ found: false, data: null })
+      setCountry({ found: false, data: null });
     }
-  }, [name])
+  }, [name]);
 
-  return country
-}
+  return country;
+};
 
 const Country = ({ country }) => {
   if (!country || !country.data) {
-    return null
+    return null;
   }
 
   if (!country.found) {
-    return (
-      <div>
-        not found...
-      </div>
-    )
+    return <div>not found...</div>;
   }
 
-  const { name, capital, population, flags } = country.data
+  const { name, capital, population, flags } = country.data;
 
   return (
     <div>
-      <h3>{name?.common || 'Unknown'} </h3>
-      <div>capital {capital && capital.length > 0 ? capital[0] : 'N/A'} </div>
-      <div>population {population || 'N/A'}</div> 
+      <h3>{name?.common || "Unknown"} </h3>
+      <div>capital {capital && capital.length > 0 ? capital[0] : "N/A"} </div>
+      <div>population {population || "N/A"}</div>
       {flags?.png && (
-        <img src={flags.png} height='100' alt={`flag of ${name?.common || 'country'}`}/>
+        <img
+          src={flags.png}
+          height="100"
+          alt={`flag of ${name?.common || "country"}`}
+        />
       )}
     </div>
-  )
-}
+  );
+};
 
 const App = () => {
-  const nameInput = useField('text')
-  const [name, setName] = useState('')
-  const country = useCountry(name)
+  const nameInput = useField("text");
+  const [name, setName] = useState("");
+  const country = useCountry(name);
 
   const fetch = (e) => {
-    e.preventDefault()
-    setName(nameInput.value)
-  }
+    e.preventDefault();
+    setName(nameInput.value);
+  };
 
   return (
     <div>
@@ -94,7 +92,7 @@ const App = () => {
       </form>
       <Country country={country} />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

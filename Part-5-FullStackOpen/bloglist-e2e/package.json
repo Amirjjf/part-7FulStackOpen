@@ -1,0 +1,16 @@
+{
+  "name": "bloglist-e2e",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test:e2e": "cross-env NODE_ENV=test npx playwright test",
+    "test:e2e:headed": "cross-env NODE_ENV=test npx playwright test --headed",
+    "test:e2e:debug": "cross-env NODE_ENV=test npx playwright test --debug",
+    "test:e2e:report": "npx playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^22.13.5",
+    "cross-env": "^7.0.3"
+  }
+}

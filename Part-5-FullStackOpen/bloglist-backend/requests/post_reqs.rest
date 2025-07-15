@@ -1,0 +1,55 @@
+GET http://localhost:3003/api/blogs HTTP/1.1
+
+###
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFtaXJyZXphIiwiaWQiOiI2N2JjYzk3MDcxY2E5YzRlMTJkOTlmODMiLCJpYXQiOjE3NDA0MjU2MjMsImV4cCI6MTc0MDQyOTIyM30.UqSUykvTSeIsNLWEepDftbm9e6LYQHSvXb47uI9petU
+
+{
+  "title": "I am happy to be here",
+  "author": "Amir",
+  "url": "http://www.janedoe.com",
+  "likes": 2354
+}
+
+
+###
+
+GET http://localhost:3003/api/users HTTP/1.1
+
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "Amir",
+  "name": "Amir JJ",
+  "password": "123"
+}
+
+
+###
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFtaXJyZXphIiwiaWQiOiI2N2JhOWVkODk0N2NlNTIwNzkxYmI1ZTgiLCJpYXQiOjE3NDAyODM2NDMsImV4cCI6MTc0MDI4NzI0M30.VvWxKiJb3z0G3tjnMNB0-ofx6zBHmF3qR07mT3vEaIY
+
+{
+  "title": "There are many Things I Dont Know as of 2018",
+  "author": "Dan Abramov",
+  "url": "https://overreacted.io/things-i-dont-know-as-of-2018/",
+  "likes": 0
+}
+
+
+
+###
+
+POST http://localhost:3003/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Amirreza",
+  "password": "password123"
+}
