@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Table, Card } from "react-bootstrap";
 import { initializeUsers } from "../reducers/usersReducer";
 
 const Users = () => {
@@ -11,81 +12,49 @@ const Users = () => {
     dispatch(initializeUsers());
   }, [dispatch]);
 
-  const usersStyle = {
-    marginTop: "20px",
-    padding: "20px",
-  };
-
-  const tableStyle = {
-    borderCollapse: "collapse",
-    width: "100%",
-    marginTop: "15px",
-    backgroundColor: "white",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    borderRadius: "8px",
-    overflow: "hidden",
-  };
-
-  const thStyle = {
-    border: "none",
-    padding: "12px 16px",
-    textAlign: "left",
-    backgroundColor: "#007bff",
-    color: "white",
-    fontWeight: "bold",
-    fontSize: "16px",
-  };
-
-  const tdStyle = {
-    border: "none",
-    borderBottom: "1px solid #e9ecef",
-    padding: "12px 16px",
-    fontSize: "15px",
-  };
-
-  const titleStyle = {
-    color: "#343a40",
-    marginBottom: "10px",
-    fontSize: "28px",
-    fontWeight: "bold",
-  };
-
-  const userLinkStyle = {
-    textDecoration: "none",
-    color: "#007bff",
-    fontWeight: "bold",
-    cursor: "pointer",
-  };
-  
-
   return (
-    <div style={usersStyle}>
-      <h2 style={titleStyle}>Users</h2>
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th style={thStyle}>User</th>
-            <th style={thStyle}>Blogs created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td style={tdStyle}>
-                <Link 
-                  to={`/users/${user.id}`} 
-                  style={userLinkStyle}
-                  onMouseOver={(e) => e.target.style.textDecoration = "underline"}
-                  onMouseOut={(e) => e.target.style.textDecoration = "none"}
-                >
-                  {user.name}
-                </Link>
-              </td>
-              <td style={tdStyle}>{user.blogs ? user.blogs.length : 0}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="row">
+      <div className="col-12">
+        <h2 className="text-primary mb-4">👥 Users</h2>
+        
+        <Card className="shadow">
+          <Card.Header className="bg-primary text-white">
+            <h5 className="mb-0">User Statistics</h5>
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table striped hover responsive className="mb-0">
+              <thead className="table-dark">
+                <tr>
+                  <th>User</th>
+                  <th className="text-center">Blogs Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users
+                  .slice()
+                  .sort((a, b) => (b.blogs ? b.blogs.length : 0) - (a.blogs ? a.blogs.length : 0))
+                  .map((user) => (
+                    <tr key={user.id}>
+                      <td>
+                        <Link 
+                          to={`/users/${user.id}`} 
+                          className="text-decoration-none fw-bold"
+                        >
+                          {user.name}
+                        </Link>
+                      </td>
+                      <td className="text-center">
+                        <span className="badge bg-primary">
+                          {user.blogs ? user.blogs.length : 0}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
+import { Card, Badge, Row, Col } from "react-bootstrap";
 
 const User = () => {
   const { id } = useParams();
@@ -9,9 +10,9 @@ const User = () => {
 
   if (!user) {
     return (
-      <div style={{ padding: "20px" }}>
+      <div className="text-center mt-5">
         <h2>User not found</h2>
-        <Link to="/users" style={{ color: "#007bff", textDecoration: "none" }}>
+        <Link to="/users" className="btn btn-primary">
           ← Back to users
         </Link>
       </div>
@@ -23,110 +24,77 @@ const User = () => {
     blog.user && (blog.user.id === user.id || blog.user === user.id)
   );
 
-  const userStyle = {
-    marginTop: "20px",
-    padding: "20px",
-  };
-
-  const titleStyle = {
-    color: "#343a40",
-    marginBottom: "20px",
-    fontSize: "28px",
-    fontWeight: "bold",
-  };
-
-  const backLinkStyle = {
-    color: "#007bff",
-    textDecoration: "none",
-    marginBottom: "20px",
-    display: "inline-block",
-    fontSize: "16px",
-  };
-
-  const blogsListStyle = {
-    marginTop: "20px",
-  };
-
-  const blogItemStyle = {
-    backgroundColor: "white",
-    padding: "15px",
-    marginBottom: "10px",
-    borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    border: "1px solid #e9ecef",
-  };
-
-  const blogTitleStyle = {
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#495057",
-    textDecoration: "none",
-    marginBottom: "5px",
-    display: "block",
-  };
-
-  const blogAuthorStyle = {
-    fontSize: "14px",
-    color: "#6c757d",
-    fontStyle: "italic",
-  };
-
-  const blogUrlStyle = {
-    fontSize: "14px",
-    color: "#007bff",
-    marginTop: "5px",
-    textDecoration: "none",
-  };
-
-  const noBlogsStyle = {
-    fontSize: "16px",
-    color: "#6c757d",
-    fontStyle: "italic",
-    textAlign: "center",
-    padding: "20px",
-    backgroundColor: "#f8f9fa",
-    borderRadius: "8px",
-    marginTop: "20px",
-  };
-
   return (
-    <div style={userStyle}>
-      <Link to="/users" style={backLinkStyle}>
-        ← Back to users
-      </Link>
-      
-      <h2 style={titleStyle}>{user.name}</h2>
-      
-      <h3>Added blogs</h3>
-      
-      {userBlogs && userBlogs.length > 0 ? (
-        <div style={blogsListStyle}>
-          {userBlogs.map((blog) => (
-            <div key={blog.id} style={blogItemStyle}>
-              <div style={blogTitleStyle}>
-                {blog.title}
-              </div>
-              <div style={blogAuthorStyle}>by {blog.author}</div>
-              {blog.url && (
-                <a 
-                  href={blog.url} 
-                  style={blogUrlStyle} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onMouseOver={(e) => e.target.style.textDecoration = "underline"}
-                  onMouseOut={(e) => e.target.style.textDecoration = "none"}
-                >
-                  Visit blog →
-                </a>
-              )}
+    <div className="row">
+      <div className="col-12">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <Link to="/users" className="btn btn-outline-primary">
+            ← Back to users
+          </Link>
+        </div>
+        
+        <div className="card shadow mb-4">
+          <div className="card-header bg-primary text-white">
+            <h2 className="mb-0">👤 {user.name}</h2>
+          </div>
+          <div className="card-body">
+            <div className="d-flex justify-content-between align-items-center">
+              <h4>📚 Added blogs</h4>
+              <Badge bg="secondary" className="fs-6">
+                {userBlogs.length} blog{userBlogs.length !== 1 ? 's' : ''}
+              </Badge>
             </div>
-          ))}
+          </div>
         </div>
-      ) : (
-        <div style={noBlogsStyle}>
-          No blogs added yet
-        </div>
-      )}
+
+        {userBlogs && userBlogs.length > 0 ? (
+          <Row>
+            {userBlogs.map((blog) => (
+              <Col key={blog.id} md={6} lg={4} className="mb-4">
+                <Card className="h-100 shadow-sm">
+                  <Card.Body>
+                    <Card.Title>
+                      <Link 
+                        to={`/blogs/${blog.id}`} 
+                        className="text-decoration-none"
+                      >
+                        {blog.title}
+                      </Link>
+                    </Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      by {blog.author}
+                    </Card.Subtitle>
+                    {blog.url && (
+                      <Card.Text>
+                        <a 
+                          href={blog.url} 
+                          className="text-primary" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          Visit blog →
+                        </a>
+                      </Card.Text>
+                    )}
+                    <div className="mt-3">
+                      <Badge bg="info">👍 {blog.likes} likes</Badge>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Card className="text-center shadow-sm">
+            <Card.Body className="py-5">
+              <div className="text-muted">
+                <h5>📝 No blogs added yet</h5>
+                <p>This user hasn&apos;t created any blog posts.</p>
+              </div>
+            </Card.Body>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };

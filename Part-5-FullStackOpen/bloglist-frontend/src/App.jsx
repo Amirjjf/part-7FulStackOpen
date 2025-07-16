@@ -45,34 +45,58 @@ const App = () => {
   // Conditional Rendering
   if (!user) {
     return (
-      <div>
-        <h2>Log in to application</h2>
-        {notification && notification.message && (
-          <Notification
-            message={notification.message}
-            type={notification.type}
-          />
-        )}
-        <LoginForm handleLogin={handleLogin} />
+      <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="card shadow">
+              <div className="card-body">
+                <h2 className="card-title text-center mb-4">Log in to application</h2>
+                {notification && notification.message && (
+                  <Notification
+                    message={notification.message}
+                    type={notification.type}
+                  />
+                )}
+                <LoginForm handleLogin={handleLogin} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   // Logged-in View with routing
   return (
-    <div>
-      <h2>blog app</h2>
-      {notification && notification.message && (
-        <Notification message={notification.message} type={notification.type} />
-      )}
-      <Navigation />
-      
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/users/:id" element={<User />} />
-        <Route path="/blogs/:id" element={<BlogView />} />
-      </Routes>
+    <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12">
+            <div className="bg-primary text-white py-3 mb-4">
+              <div className="container">
+                <h1 className="h3 mb-0">📚 Blog Application</h1>
+              </div>
+            </div>
+            
+            {notification && notification.message && (
+              <div className="container">
+                <Notification message={notification.message} type={notification.type} />
+              </div>
+            )}
+            
+            <Navigation />
+            
+            <div className="container">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/users/:id" element={<User />} />
+                <Route path="/blogs/:id" element={<BlogView />} />
+              </Routes>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

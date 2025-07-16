@@ -1,11 +1,9 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import { Button, Collapse } from "react-bootstrap";
 
 // eslint-disable-next-line react/prop-types
 const Togglable = forwardRef(({ children, buttonLabel }, ref) => {
   const [visible, setVisible] = useState(false);
-
-  const hideWhenVisible = { display: visible ? "none" : "" };
-  const showWhenVisible = { display: visible ? "" : "none" };
 
   const toggleVisibility = () => {
     setVisible(!visible);
@@ -19,10 +17,19 @@ const Togglable = forwardRef(({ children, buttonLabel }, ref) => {
 
   return (
     <div>
-      <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{buttonLabel}</button>
-      </div>
-      <div style={showWhenVisible}>{children}</div>
+      {!visible && (
+        <Button 
+          variant="success" 
+          onClick={toggleVisibility}
+          className="mb-3"
+        >
+          {buttonLabel}
+        </Button>
+      )}
+      
+      <Collapse in={visible}>
+        <div>{children}</div>
+      </Collapse>
     </div>
   );
 });

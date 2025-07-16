@@ -1,101 +1,72 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { Card, Button, Badge } from "react-bootstrap";
 
 const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
-  const blogStyle = {
-    padding: "15px",
-    border: "1px solid #e9ecef",
-    borderRadius: "8px",
-    marginBottom: "15px",
-    backgroundColor: "white",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-  };
-
-  const titleStyle = {
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#007bff",
-    textDecoration: "none",
-    marginBottom: "8px",
-    display: "block",
-  };
-
-  const authorStyle = {
-    fontSize: "14px",
-    color: "#6c757d",
-    marginBottom: "10px",
-  };
-
-  const actionsStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    marginTop: "10px",
-  };
-
-  const likeButtonStyle = {
-    padding: "5px 10px",
-    border: "none",
-    borderRadius: "4px",
-    backgroundColor: "#28a745",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "12px",
-  };
-
-  const deleteButtonStyle = {
-    padding: "5px 10px",
-    border: "none",
-    borderRadius: "4px",
-    backgroundColor: "#dc3545",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "12px",
-  };
-
-  const likesStyle = {
-    fontSize: "14px",
-    color: "#6c757d",
-  };
-
   const showDeleteButton =
     user && blog.user && user.username === blog.user.username;
 
+  const handleLike = () => {
+    likeBlog(blog);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete "${blog.title}"?`)) {
+      deleteBlog(blog.id);
+    }
+  };
+
   return (
-    <div className="blog" style={blogStyle}>
-      <Link 
-        to={`/blogs/${blog.id}`} 
-        style={titleStyle}
-        onMouseOver={(e) => e.target.style.textDecoration = "underline"}
-        onMouseOut={(e) => e.target.style.textDecoration = "none"}
-      >
-        {blog.title}
-      </Link>
-      
-      <div style={authorStyle}>by {blog.author}</div>
-      
-      <div style={actionsStyle}>
-        <span style={likesStyle}>Likes: {blog.likes}</span>
-        <button 
-          style={likeButtonStyle}
-          onClick={() => likeBlog(blog)}
-          onMouseOver={(e) => e.target.style.backgroundColor = "#218838"}
-          onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}
-        >
-          👍 Like
-        </button>
-        {showDeleteButton && (
-          <button 
-            style={deleteButtonStyle}
-            onClick={() => deleteBlog(blog)}
-            onMouseOver={(e) => e.target.style.backgroundColor = "#c82333"}
-            onMouseOut={(e) => e.target.style.backgroundColor = "#dc3545"}
+    <Card className="shadow-sm h-100">
+      <Card.Body>
+        <Card.Title>
+          <Link 
+            to={`/blogs/${blog.id}`} 
+            className="text-decoration-none"
           >
-            🗑️ Delete
-          </button>
-        )}
-      </div>
-    </div>
+            {blog.title}
+          </Link>
+        </Card.Title>
+        
+        <Card.Subtitle className="mb-2 text-muted">
+          by {blog.author}
+        </Card.Subtitle>
+        
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <div>
+            <Badge bg="primary" className="me-2">
+              👍 {blog.likes} likes
+            </Badge>
+            {blog.user && (
+              <small className="text-muted">
+                Added by {blog.user.name}
+              </small>
+            )}
+          </div>
+          
+          <div>
+            <Button 
+              variant="outline-success" 
+              size="sm" 
+              onClick={handleLike}
+              className="me-2"
+            >
+              👍 Like
+            </Button>
+            
+            {showDeleteButton && (
+              <Button 
+                variant="outline-danger" 
+                size="sm" 
+                onClick={handleDelete}
+              >
+                🗑️ Delete
+              </Button>
+            )}
+          </div>
+        </div>
+      </Card.Body>
+    </Card>
   );
 };
 

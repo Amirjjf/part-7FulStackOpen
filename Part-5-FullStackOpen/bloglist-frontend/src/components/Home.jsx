@@ -60,30 +60,42 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <h2>Blog Posts</h2>
-      
-      <h3>Create New Blog</h3>
-      <Togglable buttonLabel="Create New Blog" ref={blogFormRef}>
-        <BlogForm
-          createBlog={addBlog}
-          onCancel={() => blogFormRef.current.toggleVisibility()}
-        />
-      </Togglable>
+    <div className="row">
+      <div className="col-12">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="text-primary">📚 Blog Posts</h2>
+          <span className="badge bg-secondary">{blogs.length} blogs</span>
+        </div>
+        
+        <div className="card shadow mb-4">
+          <div className="card-header bg-success text-white">
+            <h5 className="mb-0">✍️ Create New Blog</h5>
+          </div>
+          <div className="card-body">
+            <Togglable buttonLabel="Create New Blog" ref={blogFormRef}>
+              <BlogForm
+                createBlog={addBlog}
+                onCancel={() => blogFormRef.current.toggleVisibility()}
+              />
+            </Togglable>
+          </div>
+        </div>
 
-      <div style={{ marginTop: "20px" }}>
-        {blogs
-          .slice()
-          .sort((a, b) => b.likes - a.likes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              likeBlog={likeBlog}
-              deleteBlog={deleteBlog}
-              user={user}
-            />
-          ))}
+        <div className="row">
+          {blogs
+            .slice()
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <div key={blog.id} className="col-12 mb-3">
+                <Blog
+                  blog={blog}
+                  likeBlog={likeBlog}
+                  deleteBlog={deleteBlog}
+                  user={user}
+                />
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
