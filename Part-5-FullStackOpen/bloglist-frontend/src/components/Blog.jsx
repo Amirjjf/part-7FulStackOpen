@@ -1,19 +1,61 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
-  const [visible, setVisible] = useState(false);
-
   const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
+    padding: "15px",
+    border: "1px solid #e9ecef",
+    borderRadius: "8px",
+    marginBottom: "15px",
+    backgroundColor: "white",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   };
 
-  const toggleVisibility = () => {
-    setVisible(!visible);
+  const titleStyle = {
+    fontSize: "18px",
+    fontWeight: "bold",
+    color: "#007bff",
+    textDecoration: "none",
+    marginBottom: "8px",
+    display: "block",
+  };
+
+  const authorStyle = {
+    fontSize: "14px",
+    color: "#6c757d",
+    marginBottom: "10px",
+  };
+
+  const actionsStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginTop: "10px",
+  };
+
+  const likeButtonStyle = {
+    padding: "5px 10px",
+    border: "none",
+    borderRadius: "4px",
+    backgroundColor: "#28a745",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "12px",
+  };
+
+  const deleteButtonStyle = {
+    padding: "5px 10px",
+    border: "none",
+    borderRadius: "4px",
+    backgroundColor: "#dc3545",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "12px",
+  };
+
+  const likesStyle = {
+    fontSize: "14px",
+    color: "#6c757d",
   };
 
   const showDeleteButton =
@@ -21,27 +63,38 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
 
   return (
     <div className="blog" style={blogStyle}>
-      <div className="blog-summary">
-        {blog.title} {blog.author}
-        <button onClick={toggleVisibility}>{visible ? "Hide" : "View"}</button>
+      <Link 
+        to={`/blogs/${blog.id}`} 
+        style={titleStyle}
+        onMouseOver={(e) => e.target.style.textDecoration = "underline"}
+        onMouseOut={(e) => e.target.style.textDecoration = "none"}
+      >
+        {blog.title}
+      </Link>
+      
+      <div style={authorStyle}>by {blog.author}</div>
+      
+      <div style={actionsStyle}>
+        <span style={likesStyle}>Likes: {blog.likes}</span>
+        <button 
+          style={likeButtonStyle}
+          onClick={() => likeBlog(blog)}
+          onMouseOver={(e) => e.target.style.backgroundColor = "#218838"}
+          onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}
+        >
+          👍 Like
+        </button>
+        {showDeleteButton && (
+          <button 
+            style={deleteButtonStyle}
+            onClick={() => deleteBlog(blog)}
+            onMouseOver={(e) => e.target.style.backgroundColor = "#c82333"}
+            onMouseOut={(e) => e.target.style.backgroundColor = "#dc3545"}
+          >
+            🗑️ Delete
+          </button>
+        )}
       </div>
-      {visible && (
-        <div className="blog-details">
-          <div className="blog-url">URL: {blog.url}</div>
-          <div className="blog-likes">
-            Likes: {blog.likes}{" "}
-            <button onClick={() => likeBlog(blog)}>Like</button>
-          </div>
-          <div className="blog-user">
-            User: {blog.user?.name || "Anonymous"}
-          </div>
-          {showDeleteButton && (
-            <button onClick={() => deleteBlog(blog)} style={{ color: "red" }}>
-              Delete
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 };
@@ -49,6 +102,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
 // Define PropTypes
 Blog.propTypes = {
   blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,

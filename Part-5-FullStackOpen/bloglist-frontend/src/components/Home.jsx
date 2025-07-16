@@ -61,7 +61,9 @@ const Home = () => {
 
   return (
     <div>
-      <h2>Create New Blog</h2>
+      <h2>Blog Posts</h2>
+      
+      <h3>Create New Blog</h3>
       <Togglable buttonLabel="Create New Blog" ref={blogFormRef}>
         <BlogForm
           createBlog={addBlog}
@@ -69,18 +71,20 @@ const Home = () => {
         />
       </Togglable>
 
-      {blogs
-        .slice()
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            likeBlog={likeBlog}
-            deleteBlog={deleteBlog}
-            user={user}
-          />
-        ))}
+      <div style={{ marginTop: "20px" }}>
+        {blogs
+          .slice()
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              likeBlog={likeBlog}
+              deleteBlog={deleteBlog}
+              user={user}
+            />
+          ))}
+      </div>
     </div>
   );
 };

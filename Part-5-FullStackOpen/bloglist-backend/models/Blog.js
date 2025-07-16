@@ -9,6 +9,12 @@ const blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Reference to the User model
   },
+  comments: [
+    {
+      content: { type: String, required: true },
+      date: { type: Date, default: Date.now }
+    }
+  ]
 });
 
 // Ensure `id` is returned instead of `_id` and remove `__v`

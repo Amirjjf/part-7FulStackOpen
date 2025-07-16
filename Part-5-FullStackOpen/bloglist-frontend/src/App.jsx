@@ -6,6 +6,8 @@ import Notification from "./components/Notification";
 import Navigation from "./components/Navigation";
 import Home from "./components/Home";
 import Users from "./components/Users";
+import User from "./components/User";
+import BlogView from "./components/BlogView";
 import { setNotificationAsync } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { loginUser, initializeUser } from "./reducers/userReducer";
@@ -68,6 +70,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route path="/blogs/:id" element={<BlogView />} />
       </Routes>
     </div>
   );

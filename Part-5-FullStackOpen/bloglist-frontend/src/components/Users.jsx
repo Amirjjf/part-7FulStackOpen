@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { initializeUsers } from "../reducers/usersReducer";
 
 const Users = () => {
@@ -48,6 +49,13 @@ const Users = () => {
     fontSize: "28px",
     fontWeight: "bold",
   };
+
+  const userLinkStyle = {
+    textDecoration: "none",
+    color: "#007bff",
+    fontWeight: "bold",
+    cursor: "pointer",
+  };
   
 
   return (
@@ -63,7 +71,16 @@ const Users = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td style={tdStyle}>{user.name}</td>
+              <td style={tdStyle}>
+                <Link 
+                  to={`/users/${user.id}`} 
+                  style={userLinkStyle}
+                  onMouseOver={(e) => e.target.style.textDecoration = "underline"}
+                  onMouseOut={(e) => e.target.style.textDecoration = "none"}
+                >
+                  {user.name}
+                </Link>
+              </td>
               <td style={tdStyle}>{user.blogs ? user.blogs.length : 0}</td>
             </tr>
           ))}
